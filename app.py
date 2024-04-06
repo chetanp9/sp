@@ -88,77 +88,78 @@ def main_app(username):
     end_date = st.sidebar.text_input('Enter end date (YYYY-MM-DD)', '2022-01-01')
     chart_type = st.sidebar.selectbox('Select Chart Type', ['Line Chart', 'Candlestick Chart'])
 
-    # Download stock data and calculate indicators
-    data = download_stock_data(stock_symbol, start_date, end_date)
-    data_with_indicators = calculate_technical_indicators(data)
+    if st.sidebar.button('Train Model'):
+        # Download stock data and calculate indicators
+        data = download_stock_data(stock_symbol, start_date, end_date)
+        data_with_indicators = calculate_technical_indicators(data)
 
-    # Train prediction model
-    model = train_prediction_model(data_with_indicators)
+        # Train prediction model
+        model = train_prediction_model(data_with_indicators)
 
-    # Make predictions
-    predicted_prices = predict_prices(model, data_with_indicators)
+        # Make predictions
+        predicted_prices = predict_prices(model, data_with_indicators)
 
-    # Display stock data with indicators and predictions
-    st.subheader('Stock Data with Technical Indicators and Predictions')
-    st.write(data_with_indicators)
-    st.write('Predicted Prices:', predicted_prices)
+        # Display stock data with indicators and predictions
+        st.subheader('Stock Data with Technical Indicators and Predictions')
+        st.write(data_with_indicators)
+        st.write('Predicted Prices:', predicted_prices)
 
-    # Plot technical indicators and predictions
-    fig = go.Figure()
+        # Plot technical indicators and predictions
+        fig = go.Figure()
 
-    # Plot Closing Price
-    if chart_type == 'Candlestick Chart':
-        fig.add_trace(go.Candlestick(x=data_with_indicators.index,
-                                     open=data_with_indicators['Open'],
-                                     high=data_with_indicators['High'],
-                                     low=data_with_indicators['Low'],
-                                     close=data_with_indicators['Close'],
-                                     name='Candlestick'))
-    else:
-        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['Close'], name='Close'))
+        # Plot Closing Price
+        if chart_type == 'Candlestick Chart':
+            fig.add_trace(go.Candlestick(x=data_with_indicators.index,
+                                         open=data_with_indicators['Open'],
+                                         high=data_with_indicators['High'],
+                                         low=data_with_indicators['Low'],
+                                         close=data_with_indicators['Close'],
+                                         name='Candlestick'))
+        else:
+            fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['Close'], name='Close'))
 
-    # Plot EMA
-    fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['EMA_12'], name='EMA 12'))
-    fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['EMA_26'], name='EMA 26'))
+        # Plot EMA
+        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['EMA_12'], name='EMA 12'))
+        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['EMA_26'], name='EMA 26'))
 
-    # Plot MACD and Signal line
-    fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['MACD'], name='MACD'))
-    fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['MACD_Signal'], name='MACD Signal'))
+        # Plot MACD and Signal line
+        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['MACD'], name='MACD'))
+        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['MACD_Signal'], name='MACD Signal'))
 
-    # Plot RSI
-    fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['RSI'], name='RSI'))
+        # Plot RSI
+        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=data_with_indicators['RSI'], name='RSI'))
 
-    # Add Predicted Prices
-    fig.add_trace(go.Scatter(x=data_with_indicators.index, y=predicted_prices, mode='lines', name='Predicted Prices'))
+        # Add Predicted Prices
+        fig.add_trace(go.Scatter(x=data_with_indicators.index, y=predicted_prices, mode='lines', name='Predicted Prices'))
 
-    # Update layout
-    fig.update_layout(title='Stock Price and Technical Indicators',
-                      xaxis_title='Date',
-                      yaxis_title='Value',
-                      width=1000,
-                      height=600,
-                      xaxis=dict(
-                          rangeselector=dict(
-                              buttons=list([
-                                  dict(count=1, label='1m', step='month', stepmode='backward'),
-                                  dict(count=6, label='6m', step='month', stepmode='backward'),
-                                  dict(count=1, label='YTD', step='year', stepmode='todate'),
-                                  dict(count=1, label='1y', step='year', stepmode='backward'),
-                                  dict(step='all')
-                              ])
+        # Update layout
+        fig.update_layout(title='Stock Price and Technical Indicators',
+                          xaxis_title='Date',
+                          yaxis_title='Value',
+                          width=1000,
+                          height=600,
+                          xaxis=dict(
+                              rangeselector=dict(
+                                  buttons=list([
+                                      dict(count=1, label='1m', step='month', stepmode='backward'),
+                                      dict(count=6, label='6m', step='month', stepmode='backward'),
+                                      dict(count=1, label='YTD', step='year', stepmode='todate'),
+                                      dict(count=1, label='1y', step='year', stepmode='backward'),
+                                      dict(step='all')
+                                  ])
+                              ),
+                              rangeslider=dict(
+                                  visible=True
+                              ),
+                              type='date'
                           ),
-                          rangeslider=dict(
-                              visible=True
+                          yaxis=dict(
+                              fixedrange=False  # Enable up-down scrolling
                           ),
-                          type='date'
-                      ),
-                      yaxis=dict(
-                          fixedrange=False  # Enable up-down scrolling
-                      ),
-                      dragmode='zoom')  # Enable zooming with the mouse scroll wheel
+                          dragmode='zoom')  # Enable zooming with the mouse scroll wheel
 
-    # Display plot
-    st.plotly_chart(fig, use_container_width=True)
+        # Display plot
+        st.plotly_chart(fig, use_container_width=True)
 
 # Main function
 def main():

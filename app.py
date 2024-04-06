@@ -8,9 +8,12 @@ import plotly.graph_objs as go
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
 # Connect to MongoDB
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+uri = "mongodb+srv://chetanpal9826473966:jS9zwMr382ljiNB9@cluster0.ysistma.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+client = pymongo.MongoClient(uri, server_api=ServerApi('1'))
 db = client["stock_trading_platform"]
 users_collection = db["users"]
 

@@ -81,7 +81,7 @@ def set_user_session(authenticated, username=None, user_data=None):
 # Streamlit UI for login
 def login():
     st.title("Login")
-    st.image('./assets/icons8-trading-100.png', width=100)
+    st.image('icons8-trading-100.png', width=100)
     st.write("Welcome to the trading platform. Please log in to continue.")
 
     # Login form
@@ -100,7 +100,7 @@ def login():
 # Streamlit UI for registration
 def registration():
     st.title("Registration")
-    st.image('./assets/icons8-registration-64.png', width=100)
+    st.image('icons8-registration-64.png', width=100)
     st.write("Welcome to the trading platform. Please register to continue.")
 
     # Registration form
@@ -119,7 +119,7 @@ def registration():
 # Streamlit UI for the main app with watchlist functionality
 def main_app():
     st.title("Stock Price Prediction with Technical Indicators")
-    st.image('./assets/icons8-namaste-78.png', width=100)
+    st.image('icons8-namaste-78.png', width=100)
 
     if st.session_state["user_authenticated"]:
         user_data = st.session_state["user_data"]

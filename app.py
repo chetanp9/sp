@@ -187,6 +187,7 @@ def main_app():
             st.dataframe(data_with_indicators)
             st.subheader(f"Predicted Prices for {future_month_name}")
             st.write("Predicted Price Range:", pred_price_range)
+            st.write("predicted Price Data:",predicted_prices)
 
             # Plot technical indicators and predictions
             fig = go.Figure()
